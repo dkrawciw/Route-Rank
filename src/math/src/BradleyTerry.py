@@ -2,6 +2,9 @@ import numpy as np
 from pathlib import Path
 import matplotlib.pyplot as plt
 import seaborn as sns
+import numpy.typing as npt
+
+FloatArray = npt.NDArray[np.float64]
 
 """Plot setup"""
 sns.set_style("whitegrid")
@@ -25,26 +28,29 @@ DOCS_DIR.mkdir(exist_ok=True)
 
 class BradleyTerry():
     def __init__(self, num_routes: int):
-        self.num_routes = num_routes
+        self.num_routes: int = num_routes
 
-        self.route_ranks = np.zeros(num_routes)
+        self.route_ranks: FloatArray = np.zeros(num_routes, dtype=np.float64)
     
     def comparison_prediction(self, route_A_idx: int, route_B_idx: int) -> float:
-        theta_A = self.route_ranks[route_A_idx]
-        theta_B = self.route_ranks[route_B_idx]
+        theta_A: float = self.route_ranks[route_A_idx]
+        theta_B: float = self.route_ranks[route_B_idx]
 
         return 1 / (1 + np.exp(-(theta_A - theta_B)))
 
 
-    def update_rankings(self, winner_idx: int, loser_idx: int) -> None:
-        route_comparison_prediction = self.comparison_prediction(winner_idx, loser_idx)
+    def add_comparison(self, winner_idx: int, loser_idx: int) -> None:
+        route_comparison_prediction: float = self.comparison_prediction(winner_idx, loser_idx)
 
-        theta_A = self.route_ranks[winner_idx]
-        theta_B = self.route_ranks[loser_idx]
+        theta_A: float = self.route_ranks[winner_idx]
+        theta_B: float = self.route_ranks[loser_idx]
 
         self.route_ranks[winner_idx] = theta_A + GRADIENT_DESCENT_STEP_SIZE * (1 - route_comparison_prediction)
         self.route_ranks[loser_idx] = theta_B - GRADIENT_DESCENT_STEP_SIZE * (1 - route_comparison_prediction)
     
+    def get_rankings(self) -> FloatArray:
+        return self.route_ranks
+        
     def plot_comparison(self, figure_path: Path = DOCS_DIR / "bradley_terry.svg") -> None:
         plt.figure(figsize=(10,6))
 
@@ -87,7 +93,7 @@ def main():
     # Now add update
     winner_idx = 0
     loser_idx = 1
-    bt.update_rankings(winner_idx,loser_idx)
+    bt.add_comparison(winner_idx,loser_idx)
     bt.plot_comparison(DOCS_DIR / "after_update.svg")
 
 if __name__ == "__main__":
