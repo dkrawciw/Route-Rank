@@ -1,11 +1,12 @@
 import numpy as np
 import numpy.typing as npt
 from typing import cast
+from src.RankingModel import RankingModel
 
 IntArray = npt.NDArray[np.int64]
 FloatArray = npt.NDArray[np.float64]
 
-class Colley:
+class Colley(RankingModel):
     def __init__(
             self,
             num_routes: int,
