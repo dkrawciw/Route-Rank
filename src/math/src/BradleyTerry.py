@@ -44,7 +44,7 @@ class BradleyTerry():
 
         self.route_ranks[winner_idx] = theta_A + GRADIENT_DESCENT_STEP_SIZE * (1 - route_comparison_prediction)
         self.route_ranks[loser_idx] = theta_B - GRADIENT_DESCENT_STEP_SIZE * (1 - route_comparison_prediction)
-
+    
     def plot_comparison(self, figure_path: Path = DOCS_DIR / "bradley_terry.svg") -> None:
         plt.figure(figsize=(10,6))
 
@@ -71,7 +71,7 @@ class BradleyTerry():
         # Make it look like a number line
         plt.yticks([])
         plt.xlabel("Value")
-        plt.title("Ranking Each Route According to Comparrisons Recorded")
+        plt.title("Ranking Each Route According to Comparisons Recorded")
 
         # Add some padding around min/max
         padding = 0.1 * (x.max() - x.min())
